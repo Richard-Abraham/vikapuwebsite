@@ -8,32 +8,120 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { supabase } from '@/lib/supabase';
 
-// Create PDF styles
+// Update the PDF styles
 const pdfStyles = StyleSheet.create({
-  page: { padding: 30 },
-  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
-  section: { marginBottom: 10 },
-  label: { fontSize: 12, color: '#666' },
-  value: { fontSize: 14, marginBottom: 5 }
+  page: { 
+    padding: 30,
+    backgroundColor: 'white' 
+  },
+  title: { 
+    fontSize: 24, 
+    marginBottom: 20, 
+    textAlign: 'center',
+    color: '#f2800d'
+  },
+  section: { 
+    marginBottom: 10,
+    padding: 10,
+    borderBottom: '1 solid #eee'
+  },
+  label: { 
+    fontSize: 12, 
+    color: '#666',
+    marginBottom: 4
+  },
+  value: { 
+    fontSize: 14, 
+    marginBottom: 5,
+    color: '#000'
+  }
 });
 
-// PDF Document Component
-const RegistrationPDF = ({ data }) => (
-  <Document>
-    <Page size="A4" style={pdfStyles.page}>
-      <Text style={pdfStyles.title}>Registration Form - Vikapu Elite Basketball</Text>
-      {Object.entries(data).map(([key, value]) => (
-        <View key={key} style={pdfStyles.section}>
-          <Text style={pdfStyles.label}>{key.replace(/([A-Z])/g, ' $1').toUpperCase()}</Text>
-          <Text style={pdfStyles.value}>{value?.toString() || ''}</Text>
-        </View>
-      ))}
-    </Page>
-  </Document>
-);
+// Update the PDF Document Component
+const RegistrationPDF = ({ data }) => {
+  if (!data) return null;
+
+  const formatFieldName = (name) => {
+    return name
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, str => str.toUpperCase());
+  };
+
+  const renderField = (key, value) => {
+    // Skip rendering if value is undefined, null, or empty
+    if (value === undefined || value === null || value === '') return null;
+    // Skip rendering if key is termsAccepted
+    if (key === 'termsAccepted') return null;
+
+    return (
+      <View key={key} style={pdfStyles.section}>
+        <Text style={pdfStyles.label}>{formatFieldName(key)}</Text>
+        <Text style={pdfStyles.value}>{value.toString()}</Text>
+      </View>
+    );
+  };
+
+  return (
+    <Document>
+      <Page size="A4" style={pdfStyles.page}>
+        <Text style={pdfStyles.title}>Registration Form</Text>
+        {Object.entries(data)
+          .filter(([key]) => key !== 'termsAccepted')
+          .map(([key, value]) => renderField(key, value))}
+      </Page>
+    </Document>
+  );
+};
+
+// Initialize all form fields with empty strings
+const initialFormData = {
+  firstName: '',
+  lastName: '',
+  dateOfBirth: '',
+  age: '',
+  gender: '',
+  parentEmail: '',
+  parentPhone: '',
+  address: '',
+  playerEmail: '',
+  alternatePhone: '',
+  school: '',
+  residenceYear: '',
+  guardianName: '',
+  medicalConditions: '',
+  medicalInsurance: '',
+  medicalInstructions: '',
+  sportExperience: '',
+  termsAccepted: false
+};
+
+// Add this function at the top of your component file, before the component definition
+const calculateAge = (birthDate) => {
+  const today = new Date();
+  const birth = new Date(birthDate);
+  let age = today.getFullYear() - birth.getFullYear();
+  const monthDiff = today.getMonth() - birth.getMonth();
+  
+  // Adjust age if birthday hasn't occurred this year
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  
+  return age;
+};
 
 export default function PlayerRegistrationForm() {
+  // Use the initialFormData object
+  const [formData, setFormData] = useState(initialFormData);
+  const [formErrors, setFormErrors] = useState({});
+  const [showSuccess, setShowSuccess] = useState(false);
+  // Add state for active section
+  const [activeSection, setActiveSection] = useState(0);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Get current date in YYYY-MM-DD format
   const getCurrentDate = () => {
     const today = new Date();
@@ -43,60 +131,140 @@ export default function PlayerRegistrationForm() {
     return `${year}-${month}-${day}`;
   };
 
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
-    age: '',
-    parentEmail: '',
-    address: '',
-    parentPhone: '',
-    playerEmail: '',
-    alternatePhone: '',
-    school: '',
-    residenceYear: '',
-    guardianName: '',
-    medicalConditions: '',
-    medicalInsurance: '',
-    medicalInstructions: '',
-    sportExperience: '',
-    termsAccepted: false,
-    registrationDate: getCurrentDate()
-  });
-
-  const [errors, setErrors] = useState({});
-  const [activeSection, setActiveSection] = useState(0);
-  const [showSuccess, setShowSuccess] = useState(false);
-
   const sections = [
     {
       title: 'Player Information',
       fields: [
-        { name: 'firstName', label: 'First Name', type: 'text' },
-        { name: 'lastName', label: 'Last Name', type: 'text' },
-        { name: 'dateOfBirth', label: 'Date of Birth', type: 'date' },
-        { name: 'age', label: 'Age', type: 'text', readOnly: true }
+        { 
+          name: 'firstName', 
+          label: 'First Name', 
+          type: 'text',
+          autoComplete: 'given-name',
+          required: true 
+        },
+        { 
+          name: 'lastName', 
+          label: 'Last Name', 
+          type: 'text',
+          autoComplete: 'family-name',
+          required: true 
+        },
+        { 
+          name: 'dateOfBirth', 
+          label: 'Date of Birth', 
+          type: 'date',
+          autoComplete: 'bday',
+          required: true 
+        },
+        { 
+          name: 'age', 
+          label: 'Age', 
+          type: 'number',
+          autoComplete: 'off',
+          readOnly: true 
+        },
+        { 
+          name: 'gender', 
+          label: 'Gender', 
+          type: 'select',
+          autoComplete: 'sex',
+          required: true,
+          options: [
+            { value: '', label: 'Select Gender' },
+            { value: 'male', label: 'Male' },
+            { value: 'female', label: 'Female' }
+          ]
+        }
       ]
     },
     {
-      title: 'Contact Details',
+      title: 'Contact Information',
       fields: [
-        { name: 'parentEmail', label: 'Parent Email', type: 'email' },
-        { name: 'parentPhone', label: 'Parent Phone', type: 'tel' },
-        { name: 'address', label: 'Address', type: 'text' },
-        { name: 'playerEmail', label: 'Player Email', type: 'email' },
-        { name: 'alternatePhone', label: 'Alternative Phone', type: 'tel' },
-        { name: 'school', label: 'School', type: 'text' },
-        { name: 'residenceYear', label: 'Year in School', type: 'text' }
+        { 
+          name: 'parentEmail', 
+          label: 'Parent Email', 
+          type: 'email',
+          autoComplete: 'email',
+          required: true 
+        },
+        { 
+          name: 'parentPhone', 
+          label: 'Parent Phone', 
+          type: 'tel',
+          autoComplete: 'tel',
+          required: true 
+        },
+        { 
+          name: 'address', 
+          label: 'Address', 
+          type: 'text',
+          autoComplete: 'street-address',
+          required: true 
+        },
+        { 
+          name: 'playerEmail', 
+          label: 'Player Email (Optional)', 
+          type: 'email',
+          autoComplete: 'email' 
+        },
+        { 
+          name: 'alternatePhone', 
+          label: 'Alternate Phone (Optional)', 
+          type: 'tel',
+          autoComplete: 'tel' 
+        }
       ]
     },
     {
-      title: 'Medical & Guardian Information',
+      title: 'School Information',
       fields: [
-        { name: 'guardianName', label: 'Guardian Name', type: 'text' },
-        { name: 'medicalConditions', label: 'Medical Conditions', type: 'text' },
-        { name: 'medicalInsurance', label: 'Medical Insurance Institution', type: 'text' },
-        { name: 'medicalInstructions', label: 'Special Medical Instructions', type: 'textarea' }
+        { 
+          name: 'school', 
+          label: 'School Name', 
+          type: 'text',
+          autoComplete: 'organization',
+          required: true 
+        },
+        { 
+          name: 'residenceYear', 
+          label: 'Year of Residence', 
+          type: 'text',
+          autoComplete: 'off',
+          required: true 
+        },
+        { 
+          name: 'guardianName', 
+          label: 'Guardian Name', 
+          type: 'text',
+          autoComplete: 'name',
+          required: true 
+        }
+      ]
+    },
+    {
+      title: 'Medical Information',
+      fields: [
+        { 
+          name: 'medicalConditions', 
+          label: 'Medical Conditions', 
+          type: 'textarea',
+          autoComplete: 'off',
+          required: true 
+        },
+        { 
+          name: 'medicalInsurance', 
+          label: 'Medical Insurance', 
+          type: 'text',
+          autoComplete: 'off',
+          required: true 
+        },
+        { 
+          name: 'medicalInstructions', 
+          label: 'Special Medical Instructions', 
+          type: 'textarea',
+          autoComplete: 'off',
+          required: true 
+        }
       ]
     },
     {
@@ -108,13 +276,14 @@ export default function PlayerRegistrationForm() {
     }
   ];
 
-  const nextSection = () => {
+  // Add function to handle section navigation
+  const handleNextSection = () => {
     if (activeSection < sections.length - 1) {
       setActiveSection(prev => prev + 1);
     }
   };
 
-  const prevSection = () => {
+  const handlePrevSection = () => {
     if (activeSection > 0) {
       setActiveSection(prev => prev - 1);
     }
@@ -152,72 +321,89 @@ export default function PlayerRegistrationForm() {
       newErrors.alternatePhone = 'Invalid phone number format';
     }
 
-    setErrors(newErrors);
+    setFormErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
+    setFormData(prev => ({
+      ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
 
-    // Calculate age when date of birth changes
-    if (name === 'dateOfBirth') {
-      const birthDate = new Date(value);
-      const today = new Date();
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const monthDifference = today.getMonth() - birthDate.getMonth();
-      
-      if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-      }
-      
-      setFormData(prevState => ({
-        ...prevState,
-        age: age.toString()
+    // Clear error when field is modified
+    if (formErrors[name]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: ''
       }));
     }
 
-    // Clear error when field is edited
-    if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
+    // Calculate age if dateOfBirth changes
+    if (name === 'dateOfBirth' && value) {
+      const age = calculateAge(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        age: age.toString()
+      }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Form submitted');
+    setIsSubmitting(true);
     
     if (validateForm()) {
+      console.log('Form validated');
       try {
-        // Send welcome email via API route
-        const response = await fetch('/api/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            parentEmail: formData.parentEmail,
-            playerName: `${formData.firstName} ${formData.lastName}`
-          }),
-        });
+        console.log('Submitting to Supabase:', formData);
+        const { data, error } = await supabase
+          .from('players')
+          .insert([
+            {
+              first_name: formData.firstName,
+              last_name: formData.lastName,
+              date_of_birth: formData.dateOfBirth,
+              age: parseInt(formData.age),
+              gender: formData.gender,
+              parent_email: formData.parentEmail,
+              parent_phone: formData.parentPhone,
+              address: formData.address,
+              player_email: formData.playerEmail || null,
+              alternate_phone: formData.alternatePhone || null,
+              school: formData.school,
+              residence_year: formData.residenceYear,
+              guardian_name: formData.guardianName,
+              medical_conditions: formData.medicalConditions,
+              medical_insurance: formData.medicalInsurance,
+              medical_instructions: formData.medicalInstructions,
+              sport_experience: formData.sportExperience
+            }
+          ])
+          .select();
 
-        if (!response.ok) {
-          throw new Error('Failed to send welcome email');
-        }
+        console.log('Supabase response:', { data, error });
 
-        // Show success message and PDF download button
-        setShowSuccess(true);
+        if (error) throw error;
+
+        setSuccessMessage("Registration Successful! Thank you for registering with Vikapu Elite Basketball.");
+        setFormData(initialFormData);
+        setActiveSection(0);
         
+        setShowSuccess(true);
+
       } catch (error) {
         console.error('Registration error:', error);
-        alert('There was an error submitting the form');
+        setSuccessMessage(`Error: ${error.message}`);
+      } finally {
+        setIsSubmitting(false);
       }
+    } else {
+      console.log('Form validation failed', formErrors);
+      setIsSubmitting(false);
     }
   };
 
@@ -313,12 +499,12 @@ export default function PlayerRegistrationForm() {
                       id={field.name}
                       name={field.name}
                       value={formData[field.name]}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       readOnly={field.readOnly}
                       className={`
                         bg-[#1f1915] border-[#54473b] text-white
                         focus:border-[#f2800d] focus:ring-[#f2800d]
-                        ${errors[field.name] ? 'border-red-500' : ''}
+                        ${formErrors[field.name] ? 'border-red-500' : 'border-gray-300'}
                         ${field.readOnly ? 'opacity-50' : ''}
                       `}
                     />
@@ -341,8 +527,8 @@ export default function PlayerRegistrationForm() {
                       </Label>
                     </div>
                   )}
-                  {errors[field.name] && (
-                    <p className="text-red-500 text-sm">{errors[field.name]}</p>
+                  {formErrors[field.name] && (
+                    <p className="text-red-500 text-sm">{formErrors[field.name]}</p>
                   )}
                 </div>
               ))}
@@ -353,7 +539,7 @@ export default function PlayerRegistrationForm() {
               {activeSection > 0 && (
                 <Button 
                   type="button" 
-                  onClick={prevSection}
+                  onClick={handlePrevSection}
                   variant="outline"
                   className="border-[#54473b] text-white hover:bg-[#1f1915]"
                 >
@@ -364,7 +550,7 @@ export default function PlayerRegistrationForm() {
               {activeSection < sections.length - 1 ? (
                 <Button 
                   type="button" 
-                  onClick={nextSection}
+                  onClick={handleNextSection}
                   className="ml-auto bg-[#f2800d] hover:bg-[#f2800d]/90 text-white"
                 >
                   Next
@@ -372,9 +558,10 @@ export default function PlayerRegistrationForm() {
               ) : (
                 <Button 
                   type="submit" 
-                  className="ml-auto bg-[#f2800d] hover:bg-[#f2800d]/90 text-white"
+                  disabled={isSubmitting}
+                  className="ml-auto bg-[#f2800d] hover:bg-[#f2800d]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Submit Registration
+                  {isSubmitting ? 'Submitting...' : 'Submit Registration'}
                 </Button>
               )}
             </div>
@@ -391,21 +578,28 @@ export default function PlayerRegistrationForm() {
               animate={{ opacity: 1 }}
               className="mt-6 text-center space-y-4"
             >
-              <p className="text-green-500">Registration successful! Welcome email sent.</p>
-              <PDFDownloadLink
-                document={<RegistrationPDF data={formData} />}
-                fileName={`registration-${formData.firstName}-${formData.lastName}.pdf`}
+              <p className="text-green-500">{successMessage}</p>
+              <Button 
+                onClick={() => {
+                  setShowSuccess(false);
+                  setFormData(initialFormData);
+                  setActiveSection(0);
+                }} 
+                className="bg-[#f2800d] hover:bg-[#f2800d]/90 text-white"
               >
-                {({ loading }) => (
-                  <Button 
-                    className="bg-[#f2800d] hover:bg-[#f2800d]/90 text-white"
-                    disabled={loading}
-                  >
-                    {loading ? 'Generating PDF...' : 'Download Registration Form (PDF)'}
-                  </Button>
-                )}
-              </PDFDownloadLink>
+                Register Another Player
+              </Button>
             </motion.div>
+          )}
+
+          {successMessage && (
+            <div className={`text-center p-4 rounded-md ${
+              successMessage.includes('Error') 
+                ? 'bg-red-100 text-red-700' 
+                : 'bg-green-100 text-green-700'
+            }`}>
+              {successMessage}
+            </div>
           )}
         </CardContent>
       </Card>
