@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from "framer-motion";
-import { Calendar, Check, ChevronDown } from 'lucide-react';
+import { Calendar, Check, ChevronDown, Phone, Instagram } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,8 +11,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import * as Dialog from '@radix-ui/react-dialog';
+import Link from 'next/link';
+import { useRef } from 'react';
 
 export default function Training() {
+  const registrationRef = useRef(null);
+
   const packages = [
     {
       title: "Registration Fee",
@@ -102,7 +107,7 @@ export default function Training() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-fixed"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.6) 100%), url("https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2070")`
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.6) 100%), url("/images/IMG_6883.jpg")`
           }}
         />
         
@@ -131,141 +136,150 @@ export default function Training() {
             </motion.p>
             <Button 
               className="bg-[#f2800d] hover:bg-[#f2800d]/90 text-white px-10 py-7 text-lg rounded-xl transform transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-[#f2800d]/20"
-              onClick={() => document.getElementById('packages').scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => registrationRef.current?.scrollIntoView({ behavior: 'smooth' })}
             >
-              View Packages
+              Enroll Now
               <ChevronDown className="ml-2 h-5 w-5 animate-bounce" />
             </Button>
           </motion.div>
         </div>
       </section>
 
-      <div className="max-w-[960px] mx-auto px-4 space-y-24 pb-16">
-        {/* Session Schedule */}
-        <motion.section
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-          className="relative z-10"
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-10 relative">
-            Training Schedule
-            <span className="absolute -bottom-2 left-0 w-20 h-1 bg-[#f2800d]"></span>
-          </h2>
-          <motion.div className="grid gap-4" variants={staggerContainer}>
-            {sessions.map((session) => (
-              <motion.div 
-                key={session.id} 
-                variants={fadeInUp}
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Card className="bg-[#27211b] border-[#54473b] hover:border-[#f2800d] transition-all duration-300">
-                  <CardContent className="flex items-center p-6">
-                    <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-[#f2800d] to-[#ff9933] text-white font-bold text-xl shadow-lg">
-                      {session.number}
-                    </div>
-                    <div className="ml-6">
-                      <h3 className="text-lg font-semibold text-white mb-1">Session {session.number}</h3>
-                      <p className="text-[#baab9c] text-base">{session.date}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.section>
+      {/* Registration Section */}
+      <section ref={registrationRef} className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="bg-[#27211b] border border-[#54473b] rounded-2xl p-8 md:p-12 mb-20"
+          >
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold text-white mb-4">
+                Ready to <span className="text-[#f2800d]">Join Us?</span>
+              </h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Take the first step towards elevating your game. Register now or contact us for more information.
+              </p>
+            </div>
 
-        {/* Coaches */}
-        <motion.section
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-10 relative">
-            Meet Your Coaches
-            <span className="absolute -bottom-2 left-0 w-20 h-1 bg-[#f2800d]"></span>
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {coaches.map((coach) => (
-              <motion.div 
-                key={coach.id} 
-                variants={fadeInUp}
+            <div className="grid md:grid-cols-2 gap-8">
+              <motion.div
                 whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
+                className="bg-black/20 p-8 rounded-xl text-center"
               >
-                <Card className="bg-[#27211b] border-[#54473b] hover:border-[#f2800d] transition-all duration-300">
-                  <CardContent className="flex items-center p-6">
-                    <div className="w-16 h-16 rounded-full overflow-hidden bg-[#f2800d]">
-                      <Image
-                        src={coach.image}
-                        alt={coach.alt}
-                        width={64}
-                        height={64}
-                        className="w-full h-full object-cover"
-                        priority
-                      />
-                    </div>
-                    <div className="ml-6">
-                      <h3 className="text-lg font-semibold text-white">{coach.name}</h3>
-                      <p className="text-[#baab9c]">{coach.role}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <h3 className="text-2xl font-bold text-white mb-4">Register Now</h3>
+                <p className="text-gray-400 mb-6">
+                  Fill out our registration form to secure your spot in our training programs.
+                </p>
+                <Link href="/register">
+                  <Button className="bg-[#f2800d] hover:bg-[#f2800d]/90 text-white px-8 py-6 text-lg">
+                    Start Registration
+                  </Button>
+                </Link>
               </motion.div>
-            ))}
-          </div>
-        </motion.section>
 
-        {/* Packages */}
-        <motion.section
-          id="packages"
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-          variants={staggerContainer}
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-10 relative">
-            Training Packages
-            <span className="absolute -bottom-2 left-0 w-20 h-1 bg-[#f2800d]"></span>
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {packages.map((pkg) => (
-              <motion.div 
-                key={pkg.title} 
-                variants={fadeInUp}
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Card className="bg-[#27211b] border-[#54473b] hover:border-[#f2800d] transition-all duration-300">
-                  <CardHeader>
-                    <CardTitle className="text-white">{pkg.title}</CardTitle>
-                    <div className="text-3xl font-black text-white mt-2">
-                      {pkg.price}
-                      <span className="text-lg text-[#baab9c]">/month</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <Button className="w-full bg-[#393028] hover:bg-[#393028]/80 text-white mb-6">
-                      Select Package
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-black/20 p-8 rounded-xl text-center cursor-pointer"
+                  >
+                    <h3 className="text-2xl font-bold text-white mb-4">Contact Us</h3>
+                    <p className="text-gray-400 mb-6">
+                      Have questions? Reach out to us directly through phone or Instagram.
+                    </p>
+                    <Button className="bg-white/10 hover:bg-white/20 text-white px-8 py-6 text-lg">
+                      Get in Touch
                     </Button>
-                    <ul className="space-y-3">
-                      {pkg.features.map((feature) => (
-                        <li key={feature} className="flex items-center text-white text-sm">
-                          <Check className="mr-2 h-5 w-5 text-[#f2800d]" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
-      </div>
+                  </motion.div>
+                </Dialog.Trigger>
+
+                <Dialog.Portal>
+                  <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]" />
+                  <Dialog.Content className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-[#27211b] border-[#54473b] text-white w-[90vw] max-w-md rounded-lg p-6 z-[101]">
+                    <Dialog.Title className="text-2xl font-bold mb-4">
+                      Contact Us
+                    </Dialog.Title>
+                    
+                    <div className="space-y-6">
+                      <a 
+                        href="tel:+254712345678" 
+                        className="flex items-center gap-4 p-4 bg-black/20 rounded-lg hover:bg-black/30 transition-colors"
+                      >
+                        <Phone className="h-6 w-6 text-[#f2800d]" />
+                        <div>
+                          <p className="font-medium">Call Us</p>
+                          <p className="text-sm text-gray-400">+254 712 345 678</p>
+                        </div>
+                      </a>
+
+                      <a 
+                        href="https://instagram.com/vikapuelitebasketball" 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-4 p-4 bg-black/20 rounded-lg hover:bg-black/30 transition-colors"
+                      >
+                        <Instagram className="h-6 w-6 text-[#f2800d]" />
+                        <div>
+                          <p className="font-medium">DM on Instagram</p>
+                          <p className="text-sm text-gray-400">@vikapuelitebasketball</p>
+                        </div>
+                      </a>
+                    </div>
+
+                    <Dialog.Close asChild>
+                      <button
+                        className="absolute top-4 right-4 text-gray-400 hover:text-white"
+                        aria-label="Close"
+                      >
+                        ✕
+                      </button>
+                    </Dialog.Close>
+                  </Dialog.Content>
+                </Dialog.Portal>
+              </Dialog.Root>
+            </div>
+          </motion.div>
+
+          {/* Sessions Section */}
+          <motion.section
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="mb-20"
+          >
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-10 relative">
+              Training Sessions
+              <span className="absolute -bottom-2 left-0 w-20 h-1 bg-[#f2800d]"></span>
+            </h2>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sessions.map((session) => (
+                <motion.div
+                  key={session.id}
+                  variants={fadeInUp}
+                  {...cardHover}
+                >
+                  <Card className="bg-[#27211b] border-[#54473b] hover:border-[#f2800d] transition-all duration-300">
+                    <CardHeader>
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-full bg-[#f2800d]/10 flex items-center justify-center">
+                          <Calendar className="h-6 w-6 text-[#f2800d]" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-white">Session {session.number}</CardTitle>
+                          <p className="text-sm text-gray-400 mt-1">{session.date}</p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
+        </div>
+      </section>
     </main>
   );
 }

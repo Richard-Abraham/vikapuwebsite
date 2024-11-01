@@ -26,6 +26,18 @@
   .text-warm {
     @apply text-black/90;
   }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  
+  .scrollbar-thumb-\[\#f2800d\]\/20 {
+    scrollbar-color: rgba(242, 128, 13, 0.2) transparent;
+  }
+  
+  .scrollbar-track-transparent {
+    scrollbar-track-color: transparent;
+  }
 }
 
 @keyframes float {
@@ -43,4 +55,22 @@
 
 .card-hover {
   @apply transition-all duration-300 hover:scale-[1.02] hover-glow;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(242, 128, 13, 0.2) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(242, 128, 13, 0.2);
+  border-radius: 20px;
 }

@@ -1,62 +1,95 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 
 export default function Navigation() {
-  const [scrolled, setScrolled] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  
+  // Close menu when route changes
   useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
-      setScrolled(isScrolled);
-    };
+    setIsOpen(false);
+  }, [pathname]);
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const navLinks = [
+  const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'Programs', href: '#' },
+    { label: 'Programs', href: '/programs' },
     { label: 'Training', href: '/training' },
-    { label: 'Gallery', href: '/gallery' },
-    { label: 'News', href: '/news' },
-    { label: 'Portal', href: '#' }
+    { label: 'About', href: '/about' }
   ];
 
   return (
-    <header className={`fixed w-full z-50 transition-all duration-300 ${
-      scrolled ? 'bg-[#181411] shadow-lg' : 'bg-transparent'
-    }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed w-full z-50 bg-[#181411]/95 backdrop-blur-md border-b border-[#54473b]">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center">
-            <Link href="/" className="text-white font-bold text-xl">
-              Vikapu Elite Basketball Academy
-            </Link>
-          </div>
+          <Link href="/" className="flex-shrink-0">
+            <span className="text-xl font-bold text-white">Vikapu Elite Basketball</span>
+          </Link>
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((item) => (
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className={`${
-                  scrolled 
-                    ? 'text-white hover:text-[#f2800d]' 
-                    : 'text-white/90 hover:text-white'
-                } transition-colors duration-200`}
+                className={`text-sm font-medium transition-colors hover:text-[#f2800d] ${
+                  pathname === item.href ? 'text-[#f2800d]' : 'text-white/80'
+                }`}
               >
                 {item.label}
               </Link>
             ))}
-          </nav>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 rounded-md text-white/80 hover:text-white focus:outline-none"
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
       </div>
-    </header>
+
+      {/* Mobile Navigation */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden bg-[#1f1915]"
+          >
+            <div className="px-4 pt-2 pb-4 space-y-1">
+              {navItems.map((item) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Link
+                    href={item.href}
+                    className={`block py-3 px-4 rounded-lg text-base font-medium transition-colors ${
+                      pathname === item.href
+                        ? 'bg-[#f2800d]/10 text-[#f2800d]'
+                        : 'text-white/80 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 }

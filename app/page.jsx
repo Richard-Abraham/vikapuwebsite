@@ -277,7 +277,7 @@ export default function Home() {
             <div
               className="flex min-h-[300px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-xl items-center justify-center p-8 mb-12"
               style={{
-                backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url("https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2070")',
+                backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url("/images/IMG_6934.jpg")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
