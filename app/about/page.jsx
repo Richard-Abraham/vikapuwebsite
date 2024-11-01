@@ -5,12 +5,6 @@ import { Target, Heart, Users } from "lucide-react";
 import Image from "next/image";
 
 export default function About() {
-  const fadeInUp = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5 }
-  };
-
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#181411] to-[#1f1915] pt-16">
       {/* Hero Section with History */}
@@ -18,7 +12,8 @@ export default function About() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-fixed"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.8) 100%), url("/images/IMG_6883.jpg")`
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.8) 100%), url("/images/IMG_6883.jpg")`,
+            backgroundSize: 'cover'
           }}
         />
         
@@ -37,7 +32,7 @@ export default function About() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-lg text-white/90 leading-relaxed"
           >
-            Founded in 2023, Vikapu Elite Academy emerged from a passion for basketball and a vision to transform young talents. Starting with just a handful of dedicated players, we've grown into a community that believes in the power of sports to shape character and create opportunities.
+            Founded in 2023, Vikapu Elite Basketball Academy emerged from a passion for basketball and a vision to transform young talents. Starting with just a handful of dedicated players, we've grown into a community that believes in the power of sports to shape character and create opportunities.
           </motion.p>
         </div>
       </section>
@@ -116,7 +111,7 @@ export default function About() {
                 </h2>
                 <div className="space-y-4 text-gray-400">
                   <p>
-                    At Vikapu Elite, we believe basketball is more than just a game. It's a tool for positive change in our community. Through our programs, we:
+                    At Vikapu Elite Basketball, we believe basketball is more than just a game. It's a tool for positive change in our community. Through our programs, we:
                   </p>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>Create opportunities for youth development and leadership</li>
@@ -132,6 +127,8 @@ export default function About() {
                   src="/images/IMG_6883.jpg"
                   alt="Community Impact"
                   fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
