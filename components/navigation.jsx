@@ -24,6 +24,7 @@ export default function Navigation() {
     { label: 'Home', href: '/' },
     { label: 'Programs', href: '/programs' },
     { label: 'Training', href: '/training' },
+    { label: 'News', href: '/news' },
     { label: 'About', href: '/about' }
   ];
 
