@@ -32,7 +32,6 @@ export default function Programs() {
         "Small group training",
         "Individual skill assessment",
         "Progress tracking",
-        "Video analysis",
         "Conditioning drills"
       ]
     },
@@ -40,14 +39,11 @@ export default function Programs() {
       title: "After School Training",
       icon: Clock,
       shortDesc: "Structured training program for students after regular school hours",
-      schedule: "Monday - Friday: 4:00 PM - 6:00 PM",
+      schedule: "Monday, Wednesday & Friday: 4:00 PM - 6:00 PM",
       fullDesc: "Perfect for students looking to improve their game while maintaining academic excellence. Our after-school program combines skills development with supervised practice sessions.",
-      price: "Ksh 10,000 per month",
+      price: "Ksh 1,500 per session",
       features: [
         "Flexible scheduling",
-        "Homework support",
-        "Transportation available",
-        "Snacks provided",
         "Regular progress reports",
         "Parent-coach meetings"
       ]
@@ -56,12 +52,11 @@ export default function Programs() {
       title: "Holiday Training",
       icon: Calendar,
       shortDesc: "Intensive basketball camps during school holidays (April, August, December)",
-      schedule: "Monday - Friday: 9:00 AM - 3:00 PM during holiday periods",
+      schedule: "Monday, Wednesday  Friday & saturday: 9:00 AM - 12:00 PM during holiday periods",
       fullDesc: "Immersive basketball experience during school holidays. Players will participate in intensive training sessions, scrimmages, and tournaments while developing their skills and basketball IQ.",
       price: "Ksh 15,000 per week",
       features: [
         "Full-day program",
-        "Lunch provided",
         "Tournament play",
         "Guest coaches",
         "Team building activities",
@@ -78,7 +73,6 @@ export default function Programs() {
       features: [
         "One-on-one coaching",
         "College recruitment support",
-        "SAT/ACT prep",
         "Highlight reel creation",
         "Scholarship guidance",
         "NCAA eligibility assistance"

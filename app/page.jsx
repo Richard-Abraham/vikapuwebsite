@@ -13,24 +13,31 @@ import {
   Handshake, 
   GraduationCap 
 } from 'lucide-react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ChevronDown } from 'lucide-react';
 
 export default function Home() {
   const router = useRouter();
 
   const coaches = [
     {
-      name: "John Smith",
+      name: "Zedekiah Otieno",
       role: "Head Coach",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974",
-      achievements: "20+ Years Experience, NBA Development Coach",
+      image: "/images/Zeddy.jpeg",
+      achievements: "20+ Years Experience, NBA trained Development Coach",
       description: "Former professional player with extensive coaching experience at all levels."
     },
     {
-      name: "Sarah Johnson",
-      role: "Assistant Coach",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1974",
-      achievements: "NCAA Division I Coach, Youth Development Specialist",
-      description: "Specializes in player development and fundamental skills training."
+      name: "Grace Wockunyanyis",
+      role: "Operations Manager",
+      image: "/images/Grace.jpeg",
+      achievements: " Youth Development Specialist",
+      description: "Specializes in player development and Basketball Operations with jr NBA."
     }
   ];
 
@@ -101,28 +108,28 @@ export default function Home() {
               {
                 title: "Summer Camp 2024",
                 description: "Join our intensive 6-week summer training program. Early bird registration now open!",
-                image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2070",
+                image: "/images/IMG_6873.jpg",
                 date: "June 15 - July 30",
                 tag: "Upcoming Camp"
               },
               {
                 title: "State Tournament",
                 description: "Prepare for the upcoming state championship. View schedule and registration details.",
-                image: "https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=2069",
+                image: "/images/IMG_6877.jpg",
                 date: "May 1-3, 2024",
                 tag: "Tournament"
               },
               {
                 title: "Away Games Schedule",
                 description: "Check out our upcoming away games schedule and support our teams on the road.",
-                image: "https://images.unsplash.com/photo-1577471488278-16eec37ffcc2?q=80&w=2070",
+                image: "/images/IMG_6883.jpg",
                 date: "Ongoing",
                 tag: "Trip Games"
               },
               {
                 title: "2024 Team Rosters",
                 description: "Updated team rosters for all divisions now available. View player assignments and schedules.",
-                image: "https://images.unsplash.com/photo-1519861531473-9200262188bf?q=80&w=2071",
+                image: "/images/IMG_6899.jpg",
                 date: "Updated Weekly",
                 tag: "Rosters"
               }
@@ -216,22 +223,22 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
-                image: "https://images.unsplash.com/photo-1577471488278-16eec37ffcc2",
+                image: "/images/IMG_6903.jpg",
                 title: "National Championship 2023",
                 description: "Overall Champions"
               },
               {
-                image: "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4",
+                image: "/images/IMG_6934.jpg",
                 title: "Regional Tournament",
                 description: "First Place"
               },
               {
-                image: "https://images.unsplash.com/photo-1579187707643-35646d22b596",
+                image: "/images/IMG_6986.jpg",
                 title: "Youth League Champions",
                 description: "Under-18 Division"
               },
               {
-                image: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1",
+                image: "/images/IMG_6994.jpg",
                 title: "Coach of the Year",
                 description: "Excellence in Leadership"
               }
@@ -410,6 +417,120 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 bg-[#181411] relative overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute blur-3xl opacity-10 animate-pulse -top-24 -left-24 w-96 h-96 rounded-full bg-[#f2800d]" />
+          <div className="absolute blur-3xl opacity-5 animate-pulse delay-700 top-1/2 -right-24 w-80 h-80 rounded-full bg-[#f2800d]" />
+        </div>
+
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <span className="inline-block px-4 py-2 rounded-full bg-[#f2800d]/10 text-[#f2800d] text-sm font-semibold mb-4">
+              Got Questions?
+            </span>
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Frequently Asked <span className="text-[#f2800d]">Questions</span>
+            </h2>
+            <p className="text-gray-400">
+              Find answers to common questions about our basketball programs
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="space-y-4"
+          >
+            <Accordion type="single" collapsible className="space-y-4">
+              <AccordionItem value="item-1" className="group border-0">
+                <AccordionTrigger className="flex w-full items-center justify-between rounded-xl bg-[#27211b] px-6 py-4 text-left text-white transition-all hover:bg-[#27211b]/80 [&[data-state=open]>div>svg]:rotate-180">
+                  <div className="flex justify-between w-full items-center">
+                    <span className="font-medium group-hover:text-[#f2800d] transition-colors">
+                      Do you help players get scholarships?
+                    </span>
+                    <ChevronDown className="h-5 w-5 shrink-0 text-[#f2800d] transition-transform duration-300" />
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="overflow-hidden px-6 text-gray-400">
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="py-4 space-y-2"
+                  >
+                    Yes, we actively support our players in pursuing basketball scholarships. 
+                    Our program has a strong track record of helping athletes secure opportunities 
+                    at both high school and college levels. We provide guidance throughout the 
+                    recruitment process, help with game footage compilation, and leverage our 
+                    extensive network of contacts in the basketball community.
+                  </motion.div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-2" className="group border-0">
+                <AccordionTrigger className="flex w-full items-center justify-between rounded-xl bg-[#27211b] px-6 py-4 text-left text-white transition-all hover:bg-[#27211b]/80 [&[data-state=open]>div>svg]:rotate-180">
+                  <div className="flex justify-between w-full items-center">
+                    <span className="font-medium group-hover:text-[#f2800d] transition-colors">
+                      What are your training fees?
+                    </span>
+                    <ChevronDown className="h-5 w-5 shrink-0 text-[#f2800d] transition-transform duration-300" />
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="overflow-hidden px-6 text-gray-400">
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="py-4 space-y-4"
+                  >
+                    <p>Our training fees vary based on program type and duration. We offer flexible payment options including:</p>
+                    <ul className="list-disc pl-6 space-y-2">
+                      <li>Individual sessions</li>
+                      <li>Package deals</li>
+                      <li>Monthly memberships</li>
+                      <li>Seasonal programs</li>
+                    </ul>
+                    <p>Please visit our Programs page for detailed pricing information and current rates.</p>
+                  </motion.div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-3" className="group border-0">
+                <AccordionTrigger className="flex w-full items-center justify-between rounded-xl bg-[#27211b] px-6 py-4 text-left text-white transition-all hover:bg-[#27211b]/80 [&[data-state=open]>div>svg]:rotate-180">
+                  <div className="flex justify-between w-full items-center">
+                    <span className="font-medium group-hover:text-[#f2800d] transition-colors">
+                      Do you train adults?
+                    </span>
+                    <ChevronDown className="h-5 w-5 shrink-0 text-[#f2800d] transition-transform duration-300" />
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="overflow-hidden px-6 text-gray-400">
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="py-4"
+                  >
+                    Absolutely! We welcome players of all ages who want to improve their basketball skills. 
+                    Our adult programs are tailored to accommodate varying skill levels and fitness goals, 
+                    from beginners to advanced players. Whether you&apos;re looking to stay active, improve your 
+                    game, or join competitive leagues, we have programs designed for you.
+                  </motion.div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </motion.div>
         </div>
       </section>
     </main>

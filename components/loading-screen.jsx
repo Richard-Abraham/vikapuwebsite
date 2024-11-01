@@ -8,16 +8,17 @@ export default function LoadingScreen({ isInitial = false }) {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: isInitial ? 0.5 : 0.3 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-[#181411]"
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-gradient-to-r from-[#f2800d] via-[#ff4d00] to-[#f2800d] animate-gradient"
     >
-      <div className="relative">
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="relative z-10">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: [0.8, 1.1, 1], opacity: 1 }}
           transition={{ duration: isInitial ? 0.5 : 0.3 }}
           className="w-24 h-24"
         >
-          <svg viewBox="0 0 48 48" className="w-full h-full text-[#f2800d]">
+          <svg viewBox="0 0 48 48" className="w-full h-full text-white">
             <motion.path
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
@@ -34,7 +35,7 @@ export default function LoadingScreen({ isInitial = false }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-[#f2800d] font-bold"
+            className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-white font-bold"
           >
             Vikapu Elite Basketball Academy
           </motion.div>

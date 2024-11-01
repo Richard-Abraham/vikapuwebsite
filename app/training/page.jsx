@@ -18,42 +18,6 @@ import { useRef } from 'react';
 export default function Training() {
   const registrationRef = useRef(null);
 
-  const packages = [
-    {
-      title: "Registration Fee",
-      price: "ksh 2500",
-      features: [
-        "Unlimited Sessions",
-        "Free Jersey",
-        "Free Basketball",
-        "Free Water Bottle",
-        "Free Drawstring Bag"
-      ]
-    },
-    {
-      title: "Daily charge per session",
-      price: "ksh 1500",
-      features: [
-        "8 Sessions",
-        "Free Jersey",
-        "Free Basketball",
-        "Free Water Bottle",
-        "Free Drawstring Bag"
-      ]
-    },
-    {
-      title: "Monthly Charge",
-      price: "ksh 10,000",
-      features: [
-        "4 Sessions",
-        "Free Jersey",
-        "Free Basketball",
-        "Free Water Bottle",
-        "Free Drawstring Bag"
-      ]
-    }
-  ];
-
   const sessions = [
     { id: 1, number: "1", date: "Mon 4:00 - 6:00 PM" },
     { id: 2, number: "2", date: "Wed 4:00 - 6:00 PM" },
@@ -62,22 +26,6 @@ export default function Training() {
     { id: 5, number: "5", date: "Sun 2:00 - 4:00 PM" }
   ];
 
-  const coaches = [
-    {
-      id: 1,
-      name: "John Smith",
-      role: "Head Coach",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-      alt: "Coach John Smith"
-    },
-    {
-      id: 2,
-      name: "Alex Brown",
-      role: "Assistant Coach",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
-      alt: "Coach Alex Brown"
-    }
-  ];
 
   const fadeInUp = {
     initial: { opacity: 0, y: 30 },
@@ -209,12 +157,12 @@ export default function Training() {
                         <Phone className="h-6 w-6 text-[#f2800d]" />
                         <div>
                           <p className="font-medium">Call Us</p>
-                          <p className="text-sm text-gray-400">+254 712 345 678</p>
+                          <p className="text-sm text-gray-400">+254 726 970839</p>
                         </div>
                       </a>
 
                       <a 
-                        href="https://instagram.com/vikapuelitebasketball" 
+                        href="https://www.instagram.com/vikapuelitebasketballacademy?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-4 p-4 bg-black/20 rounded-lg hover:bg-black/30 transition-colors"
