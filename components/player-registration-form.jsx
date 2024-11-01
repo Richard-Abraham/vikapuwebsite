@@ -172,7 +172,8 @@ export default function PlayerRegistrationForm() {
           options: [
             { value: '', label: 'Select Gender' },
             { value: 'male', label: 'Male' },
-            { value: 'female', label: 'Female' }
+            { value: 'female', label: 'Female' },
+            { value: 'other', label: 'Other' }
           ]
         }
       ]
@@ -228,9 +229,22 @@ export default function PlayerRegistrationForm() {
         { 
           name: 'residenceYear', 
           label: 'Year of Residence', 
-          type: 'text',
+          type: 'select',
           autoComplete: 'off',
-          required: true 
+          required: true,
+          options: [
+            { value: '', label: 'Select Year' },
+            { value: '1', label: '1' },
+            { value: '2', label: '2' },
+            { value: '3', label: '3' },
+            { value: '4', label: '4' },
+            { value: '5', label: '5' },
+            { value: '6', label: '6' },
+            { value: '7', label: '7' },
+            { value: '8', label: '8' },
+            { value: '9', label: '9' },
+            { value: '10', label: '10' }
+          ]
         },
         { 
           name: 'guardianName', 
@@ -270,7 +284,25 @@ export default function PlayerRegistrationForm() {
     {
       title: 'Additional Information',
       fields: [
-        { name: 'sportExperience', label: 'Sports Experience', type: 'textarea' },
+        { 
+          name: 'sportExperience', 
+          label: 'Years of Sports Experience', 
+          type: 'select',
+          options: [
+            { value: '', label: 'Select Years' },
+            { value: '0', label: '0' },
+            { value: '1', label: '1' },
+            { value: '2', label: '2' },
+            { value: '3', label: '3' },
+            { value: '4', label: '4' },
+            { value: '5', label: '5' },
+            { value: '6', label: '6' },
+            { value: '7', label: '7' },
+            { value: '8', label: '8' },
+            { value: '9', label: '9' },
+            { value: '10', label: '10' }
+          ]
+        },
         { name: 'termsAccepted', label: 'I accept the terms and conditions', type: 'checkbox' }
       ]
     }
@@ -291,6 +323,7 @@ export default function PlayerRegistrationForm() {
 
   const validateForm = () => {
     const newErrors = {};
+    let firstErrorField = null;
 
     // Basic validation
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
@@ -300,21 +333,31 @@ export default function PlayerRegistrationForm() {
     if (!formData.parentPhone.trim()) newErrors.parentPhone = 'Parent phone is required';
     if (!formData.address.trim()) newErrors.address = 'Address is required';
     if (!formData.school.trim()) newErrors.school = 'School is required';
+    if (!formData.residenceYear) newErrors.residenceYear = 'Year of residence is required';
     if (!formData.guardianName.trim()) newErrors.guardianName = 'Guardian name is required';
     if (!formData.termsAccepted) newErrors.termsAccepted = 'You must accept terms and conditions';
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (formData.parentEmail && !emailRegex.test(formData.parentEmail)) {
+    // Email validation with more strict regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.parentEmail)) {
       newErrors.parentEmail = 'Invalid email format';
     }
     if (formData.playerEmail && !emailRegex.test(formData.playerEmail)) {
       newErrors.playerEmail = 'Invalid email format';
     }
 
-    // Phone number validation (simple regex for Kenya phone numbers)
+    // Medical information validation
+    const medicalRegex = /^[a-zA-Z\s]+$|^N\/A$/;
+    if (!medicalRegex.test(formData.medicalConditions)) {
+      newErrors.medicalConditions = 'Only letters or N/A allowed';
+    }
+    if (!medicalRegex.test(formData.medicalInstructions)) {
+      newErrors.medicalInstructions = 'Only letters or N/A allowed';
+    }
+
+    // Phone number validation (Kenya)
     const phoneRegex = /^(?:\+254|0)[17]\d{8}$/;
-    if (formData.parentPhone && !phoneRegex.test(formData.parentPhone.replace(/\s/g, ''))) {
+    if (!phoneRegex.test(formData.parentPhone.replace(/\s/g, ''))) {
       newErrors.parentPhone = 'Invalid phone number format';
     }
     if (formData.alternatePhone && !phoneRegex.test(formData.alternatePhone.replace(/\s/g, ''))) {
@@ -322,6 +365,24 @@ export default function PlayerRegistrationForm() {
     }
 
     setFormErrors(newErrors);
+    
+    // If there are errors, find which section contains the first error
+    if (Object.keys(newErrors).length > 0) {
+      // Get the first error field name
+      firstErrorField = Object.keys(newErrors)[0];
+      
+      // Find which section contains this field
+      const errorSection = sections.findIndex(section =>
+        section.fields.some(field => field.name === firstErrorField)
+      );
+      
+      // Set the active section to the one containing the error
+      setActiveSection(errorSection);
+      
+      // Show error toast
+      setSuccessMessage(`Please check the ${sections[errorSection].title} section for errors`);
+    }
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -477,6 +538,26 @@ export default function PlayerRegistrationForm() {
             ))}
           </div>
 
+          {/* Add this after the section progress indicator (around line 519): */}
+          {Object.keys(formErrors).length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-red-500/10 border border-red-500/20 rounded-md p-4 mb-6"
+            >
+              <p className="text-red-400 text-sm">
+                Please correct the following errors:
+              </p>
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                {Object.entries(formErrors).map(([field, error]) => (
+                  <li key={field} className="text-red-400 text-sm">
+                    {error}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Animated Section Title */}
             <h2 className="text-xl font-semibold text-center text-[#f2800d] mb-4">
@@ -493,22 +574,31 @@ export default function PlayerRegistrationForm() {
                   >
                     {field.label}
                   </Label>
-                  {field.type !== 'checkbox' ? (
-                    <Input
-                      type={field.type}
+                  {field.type === 'select' ? (
+                    <select
                       id={field.name}
                       name={field.name}
                       value={formData[field.name]}
                       onChange={handleInputChange}
-                      readOnly={field.readOnly}
                       className={`
+                        w-full rounded-md px-3 py-2
                         bg-[#1f1915] border-[#54473b] text-white
                         focus:border-[#f2800d] focus:ring-[#f2800d]
                         ${formErrors[field.name] ? 'border-red-500' : 'border-gray-300'}
-                        ${field.readOnly ? 'opacity-50' : ''}
                       `}
-                    />
-                  ) : (
+                      required={field.required}
+                    >
+                      {field.options.map(option => (
+                        <option 
+                          key={option.value} 
+                          value={option.value}
+                          className="bg-[#1f1915] text-white"
+                        >
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : field.type === 'checkbox' ? (
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id={field.name}
@@ -526,6 +616,21 @@ export default function PlayerRegistrationForm() {
                         I accept the terms and conditions
                       </Label>
                     </div>
+                  ) : (
+                    <Input
+                      type={field.type}
+                      id={field.name}
+                      name={field.name}
+                      value={formData[field.name]}
+                      onChange={handleInputChange}
+                      readOnly={field.readOnly}
+                      className={`
+                        bg-[#1f1915] border-[#54473b] text-white
+                        focus:border-[#f2800d] focus:ring-[#f2800d]
+                        ${formErrors[field.name] ? 'border-red-500' : 'border-gray-300'}
+                        ${field.readOnly ? 'opacity-50' : ''}
+                      `}
+                    />
                   )}
                   {formErrors[field.name] && (
                     <p className="text-red-500 text-sm">{formErrors[field.name]}</p>

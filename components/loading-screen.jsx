@@ -36,7 +36,7 @@ export default function LoadingScreen({ isInitial = false }) {
             transition={{ delay: 0.5 }}
             className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-[#f2800d] font-bold"
           >
-            Vikapu Elite Academy
+            Vikapu Elite Basketball Academy
           </motion.div>
         )}
       </div>
