@@ -421,7 +421,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-[#181411] relative overflow-hidden">
+      <section className="py-20 bg-[#FFF3E6] relative overflow-hidden">
         {/* Decorative background elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute blur-3xl opacity-10 animate-pulse -top-24 -left-24 w-96 h-96 rounded-full bg-[#f2800d]" />
@@ -438,10 +438,10 @@ export default function Home() {
             <span className="inline-block px-4 py-2 rounded-full bg-[#f2800d]/10 text-[#f2800d] text-sm font-semibold mb-4">
               Got Questions?
             </span>
-            <h2 className="text-4xl font-bold text-white mb-4">
+            <h2 className="text-4xl font-bold text-black mb-4">
               Frequently Asked <span className="text-[#f2800d]">Questions</span>
             </h2>
-            <p className="text-gray-400">
+            <p className="text-black/60">
               Find answers to common questions about our basketball programs
             </p>
           </motion.div>
@@ -454,7 +454,7 @@ export default function Home() {
           >
             <Accordion type="single" collapsible className="space-y-4">
               <AccordionItem value="item-1" className="group border-0">
-                <AccordionTrigger className="flex w-full items-center justify-between rounded-xl bg-[#27211b] px-6 py-4 text-left text-white transition-all hover:bg-[#27211b]/80 [&[data-state=open]>div>svg]:rotate-180">
+                <AccordionTrigger className="flex w-full items-center justify-between rounded-xl bg-white px-6 py-4 text-left text-black transition-all hover:bg-white/90 [&[data-state=open]>div>svg]:rotate-180">
                   <div className="flex justify-between w-full items-center">
                     <span className="font-medium group-hover:text-[#f2800d] transition-colors">
                       Do you help players get scholarships?
@@ -462,7 +462,7 @@ export default function Home() {
                     <ChevronDown className="h-5 w-5 shrink-0 text-[#f2800d] transition-transform duration-300" />
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="overflow-hidden px-6 text-gray-400">
+                <AccordionContent className="overflow-hidden px-6 text-black/70">
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -479,7 +479,7 @@ export default function Home() {
               </AccordionItem>
 
               <AccordionItem value="item-2" className="group border-0">
-                <AccordionTrigger className="flex w-full items-center justify-between rounded-xl bg-[#27211b] px-6 py-4 text-left text-white transition-all hover:bg-[#27211b]/80 [&[data-state=open]>div>svg]:rotate-180">
+                <AccordionTrigger className="flex w-full items-center justify-between rounded-xl bg-white px-6 py-4 text-left text-black transition-all hover:bg-white/90 [&[data-state=open]>div>svg]:rotate-180">
                   <div className="flex justify-between w-full items-center">
                     <span className="font-medium group-hover:text-[#f2800d] transition-colors">
                       What are your training fees?
@@ -487,7 +487,7 @@ export default function Home() {
                     <ChevronDown className="h-5 w-5 shrink-0 text-[#f2800d] transition-transform duration-300" />
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="overflow-hidden px-6 text-gray-400">
+                <AccordionContent className="overflow-hidden px-6 text-black/70">
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -507,7 +507,7 @@ export default function Home() {
               </AccordionItem>
 
               <AccordionItem value="item-3" className="group border-0">
-                <AccordionTrigger className="flex w-full items-center justify-between rounded-xl bg-[#27211b] px-6 py-4 text-left text-white transition-all hover:bg-[#27211b]/80 [&[data-state=open]>div>svg]:rotate-180">
+                <AccordionTrigger className="flex w-full items-center justify-between rounded-xl bg-white px-6 py-4 text-left text-black transition-all hover:bg-white/90 [&[data-state=open]>div>svg]:rotate-180">
                   <div className="flex justify-between w-full items-center">
                     <span className="font-medium group-hover:text-[#f2800d] transition-colors">
                       Do you train adults?
@@ -515,7 +515,7 @@ export default function Home() {
                     <ChevronDown className="h-5 w-5 shrink-0 text-[#f2800d] transition-transform duration-300" />
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="overflow-hidden px-6 text-gray-400">
+                <AccordionContent className="overflow-hidden px-6 text-black/70">
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
