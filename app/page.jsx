@@ -16,21 +16,6 @@ import {
 
 export default function Home() {
   const router = useRouter();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
-  const heroImages = [
-    "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2070",
-    "https://images.unsplash.com/photo-1577471488278-16eec37ffcc2?q=80&w=2070",
-    "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?q=80&w=2070"
-  ];
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   const coaches = [
     {
@@ -52,23 +37,16 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <section className="relative h-[90vh] flex items-center overflow-hidden">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentImageIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-            className="absolute inset-0"
-          >
-            <div
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-              style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${heroImages[currentImageIndex]})`,
-              }}
-            />
-          </motion.div>
-        </AnimatePresence>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/videos/vikapu-video.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/50" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">

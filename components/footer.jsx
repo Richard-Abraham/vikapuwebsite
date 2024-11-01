@@ -34,7 +34,7 @@ export default function Footer() {
           >
             <div className="flex items-center space-x-2">
               <Basketball className="h-8 w-8 text-[#f2800d]" />
-              <span className="text-2xl font-bold text-white">Vikapu Elite Academy</span>
+              <span className="text-2xl font-bold text-white">Vikapu Elite Basketball Academy</span>
             </div>
             <p className="text-gray-400 leading-relaxed">
               Elevating basketball skills through professional training and personalized coaching.

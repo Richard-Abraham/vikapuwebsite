@@ -21,7 +21,8 @@ export default function Navigation() {
     { label: 'Home', href: '/' },
     { label: 'Programs', href: '#' },
     { label: 'Training', href: '/training' },
-    { label: 'News', href: '#' },
+    { label: 'Gallery', href: '/gallery' },
+    { label: 'News', href: '/news' },
     { label: 'Portal', href: '#' }
   ];
 
@@ -34,7 +35,7 @@ export default function Navigation() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="text-white font-bold text-xl">
-              Vikapu Elite Academy
+              Vikapu Elite Basketball Academy
             </Link>
           </div>
 
