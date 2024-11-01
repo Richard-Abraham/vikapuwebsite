@@ -7,6 +7,31 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
+import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+
+// Create PDF styles
+const pdfStyles = StyleSheet.create({
+  page: { padding: 30 },
+  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
+  section: { marginBottom: 10 },
+  label: { fontSize: 12, color: '#666' },
+  value: { fontSize: 14, marginBottom: 5 }
+});
+
+// PDF Document Component
+const RegistrationPDF = ({ data }) => (
+  <Document>
+    <Page size="A4" style={pdfStyles.page}>
+      <Text style={pdfStyles.title}>Registration Form - Vikapu Elite Basketball</Text>
+      {Object.entries(data).map(([key, value]) => (
+        <View key={key} style={pdfStyles.section}>
+          <Text style={pdfStyles.label}>{key.replace(/([A-Z])/g, ' $1').toUpperCase()}</Text>
+          <Text style={pdfStyles.value}>{value?.toString() || ''}</Text>
+        </View>
+      ))}
+    </Page>
+  </Document>
+);
 
 export default function PlayerRegistrationForm() {
   // Get current date in YYYY-MM-DD format
@@ -41,6 +66,7 @@ export default function PlayerRegistrationForm() {
 
   const [errors, setErrors] = useState({});
   const [activeSection, setActiveSection] = useState(0);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const sections = [
     {
@@ -169,34 +195,25 @@ export default function PlayerRegistrationForm() {
     
     if (validateForm()) {
       try {
-        // Here you would typically send the data to your backend
-        console.log('Form submitted:', formData);
-        
-        // Show success message
-        alert('Registration successful! We will contact you soon.');
-        
-        // Optional: Reset form
-        setFormData({
-          firstName: '',
-          lastName: '',
-          dateOfBirth: '',
-          age: '',
-          parentEmail: '',
-          address: '',
-          parentPhone: '',
-          playerEmail: '',
-          alternatePhone: '',
-          school: '',
-          residenceYear: '',
-          guardianName: '',
-          medicalConditions: '',
-          medicalInsurance: '',
-          medicalInstructions: '',
-          sportExperience: '',
-          termsAccepted: false,
-          registrationDate: getCurrentDate()
+        // Send welcome email via API route
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            parentEmail: formData.parentEmail,
+            playerName: `${formData.firstName} ${formData.lastName}`
+          }),
         });
-        setActiveSection(0);
+
+        if (!response.ok) {
+          throw new Error('Failed to send welcome email');
+        }
+
+        // Show success message and PDF download button
+        setShowSuccess(true);
+        
       } catch (error) {
         console.error('Registration error:', error);
         alert('There was an error submitting the form');
@@ -367,6 +384,29 @@ export default function PlayerRegistrationForm() {
               Registration Date: {formData.registrationDate}
             </div>
           </form>
+
+          {showSuccess && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-6 text-center space-y-4"
+            >
+              <p className="text-green-500">Registration successful! Welcome email sent.</p>
+              <PDFDownloadLink
+                document={<RegistrationPDF data={formData} />}
+                fileName={`registration-${formData.firstName}-${formData.lastName}.pdf`}
+              >
+                {({ loading }) => (
+                  <Button 
+                    className="bg-[#f2800d] hover:bg-[#f2800d]/90 text-white"
+                    disabled={loading}
+                  >
+                    {loading ? 'Generating PDF...' : 'Download Registration Form (PDF)'}
+                  </Button>
+                )}
+              </PDFDownloadLink>
+            </motion.div>
+          )}
         </CardContent>
       </Card>
     </motion.div>
