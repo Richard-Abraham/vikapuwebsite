@@ -7,73 +7,21 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { supabase } from '@/lib/supabase';
+import dynamic from 'next/dynamic';
 
-// Update the PDF styles
-const pdfStyles = StyleSheet.create({
-  page: { 
-    padding: 30,
-    backgroundColor: 'white' 
-  },
-  title: { 
-    fontSize: 24, 
-    marginBottom: 20, 
-    textAlign: 'center',
-    color: '#f2800d'
-  },
-  section: { 
-    marginBottom: 10,
-    padding: 10,
-    borderBottom: '1 solid #eee'
-  },
-  label: { 
-    fontSize: 12, 
-    color: '#666',
-    marginBottom: 4
-  },
-  value: { 
-    fontSize: 14, 
-    marginBottom: 5,
-    color: '#000'
+// Dynamic import of PDFDownloadButton
+const PDFDownloadButton = dynamic(
+  () => import('./pdf-generator').then(mod => mod.PDFDownloadButton),
+  { 
+    ssr: false,
+    loading: () => (
+      <Button disabled className="w-full bg-[#f2800d] hover:bg-[#f2800d]/90 text-white opacity-50">
+        Loading PDF Generator...
+      </Button>
+    )
   }
-});
-
-// Update the PDF Document Component
-const RegistrationPDF = ({ data }) => {
-  if (!data) return null;
-
-  const formatFieldName = (name) => {
-    return name
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/^./, str => str.toUpperCase());
-  };
-
-  const renderField = (key, value) => {
-    // Skip rendering if value is undefined, null, or empty
-    if (value === undefined || value === null || value === '') return null;
-    // Skip rendering if key is termsAccepted
-    if (key === 'termsAccepted') return null;
-
-    return (
-      <View key={key} style={pdfStyles.section}>
-        <Text style={pdfStyles.label}>{formatFieldName(key)}</Text>
-        <Text style={pdfStyles.value}>{value.toString()}</Text>
-      </View>
-    );
-  };
-
-  return (
-    <Document>
-      <Page size="A4" style={pdfStyles.page}>
-        <Text style={pdfStyles.title}>Registration Form</Text>
-        {Object.entries(data)
-          .filter(([key]) => key !== 'termsAccepted')
-          .map(([key, value]) => renderField(key, value))}
-      </Page>
-    </Document>
-  );
-};
+);
 
 // Initialize all form fields with empty strings
 const initialFormData = {
@@ -683,17 +631,26 @@ export default function PlayerRegistrationForm() {
               animate={{ opacity: 1 }}
               className="mt-6 text-center space-y-4"
             >
-              <p className="text-green-500">{successMessage}</p>
-              <Button 
-                onClick={() => {
-                  setShowSuccess(false);
-                  setFormData(initialFormData);
-                  setActiveSection(0);
-                }} 
-                className="bg-[#f2800d] hover:bg-[#f2800d]/90 text-white"
-              >
-                Register Another Player
-              </Button>
+              <div className="bg-green-500/10 border border-green-500/20 rounded-md p-6">
+                <p className="text-green-400 mb-4">{successMessage}</p>
+                
+                <div className="space-y-4">
+                  {console.log('Form data being passed:', formData)}
+                  <PDFDownloadButton formData={formData} />
+
+                  <Button 
+                    onClick={() => {
+                      setShowSuccess(false);
+                      setFormData(initialFormData);
+                      setActiveSection(0);
+                    }} 
+                    variant="outline"
+                    className="w-full border-[#54473b] text-white hover:bg-[#1f1915]"
+                  >
+                    Register Another Player
+                  </Button>
+                </div>
+              </div>
             </motion.div>
           )}
 
